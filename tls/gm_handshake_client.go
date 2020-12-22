@@ -269,11 +269,11 @@ func (hs *clientHandshakeStateGM) doFullHandshake() error {
 
 	// Thanks to dual certificates mechanism, length of certificates in GMT0024 must great than 2
 	// check server certificates
-	if len(certMsg.certificates) < 2 {
-		//zyf mod for match single double cert
+	if len(certMsg.certificates) == 0 {
+		c.sendAlert(alertInsufficientSecurity)
+		return fmt.Errorf("tls: length of certificates == 0")
+	}else if len(certMsg.certificates) == 1 {
 		certMsg.certificates = append(certMsg.certificates,certMsg.certificates[0])
-		//c.sendAlert(alertInsufficientSecurity)
-		//return fmt.Errorf("tls: length of certificates in GMT0024 must great than 2")
 	}
 
 	hs.finishedHash.Write(certMsg.marshal())

@@ -196,11 +196,11 @@ func (hs *serverHandshakeStateGM) readClientHello() (isResume bool, err error) {
 	hs.cert = c.config.Certificates
 
 	// GMT0024
-	if len(hs.cert) < 2 {
+	if len(hs.cert) == 0 {
+		c.sendAlert(alertInternalError)
+		return false, fmt.Errorf("tls: amount of server certificates == 0")
+	}else if len(hs.cert) == 1 {
 		hs.cert = append(hs.cert, hs.cert[0])
-		//zyf mod for match single double cert
-		//c.sendAlert(alertInternalError)
-		//return false, fmt.Errorf("tls: amount of server certificates must be greater than 2, which will sign and encipher respectively")
 	}
 
 	if hs.clientHello.scts {

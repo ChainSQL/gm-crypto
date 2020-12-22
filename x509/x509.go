@@ -19,6 +19,7 @@ import (
 	_ "crypto/sha1"
 	_ "crypto/sha256"
 	_ "crypto/sha512"
+	"crypto/x509"
 	"crypto/x509/pkix"
 	"encoding/asn1"
 	"encoding/pem"
@@ -2398,13 +2399,13 @@ func parseCertificateRequest(in *certificateRequest) (*CertificateRequest, error
 		RawSubjectPublicKeyInfo:  in.TBSCSR.PublicKey.Raw,
 		RawSubject:               in.TBSCSR.Subject.FullBytes,
 
-		Signature:          in.SignatureValue.RightAlign(),
+		Signature: in.SignatureValue.RightAlign(),
 		//SignatureAlgorithm: getSignatureAlgorithmFromAI(in.SignatureAlgorithm),
 		SignatureAlgorithm: SignatureAlgorithm,
 		//PublicKeyAlgorithm: getPublicKeyAlgorithmFromOID(in.TBSCSR.PublicKey.Algorithm.Algorithm),
 		PublicKeyAlgorithm: PublicKeyAlgorithm,
-		Version:    in.TBSCSR.Version,
-		Attributes: parseRawAttributes(in.TBSCSR.RawAttributes),
+		Version:            in.TBSCSR.Version,
+		Attributes:         parseRawAttributes(in.TBSCSR.RawAttributes),
 	}
 
 	var err error
@@ -2456,4 +2457,49 @@ func Pem2Cert(b []byte) (*Certificate, error) {
 		return nil, fmt.Errorf("credentials: parse cert error : %v", err)
 	}
 	return cert, nil
+}
+
+func CertificateToGM(cert *x509.Certificate) *Certificate {
+	var gmCertificate Certificate
+	gmCertificate.Raw = cert.Raw
+	gmCertificate.RawTBSCertificate = cert.RawTBSCertificate
+	gmCertificate.RawSubjectPublicKeyInfo = cert.RawSubjectPublicKeyInfo
+	gmCertificate.RawSubject = cert.RawSubject
+	gmCertificate.RawIssuer = cert.RawIssuer
+	gmCertificate.Signature = cert.Signature
+	gmCertificate.SignatureAlgorithm = SignatureAlgorithm(cert.SignatureAlgorithm)
+	gmCertificate.PublicKeyAlgorithm = PublicKeyAlgorithm(cert.PublicKeyAlgorithm)
+	gmCertificate.PublicKey = cert.PublicKey
+	gmCertificate.Version = cert.Version
+	gmCertificate.SerialNumber = new(big.Int)
+	gmCertificate.SerialNumber.Add(cert.SerialNumber, gmCertificate.SerialNumber)
+	gmCertificate.Subject = cert.Subject
+	gmCertificate.NotAfter = cert.NotAfter
+	gmCertificate.NotBefore = cert.NotBefore
+	gmCertificate.KeyUsage = KeyUsage(cert.KeyUsage)
+	gmCertificate.Extensions = cert.Extensions
+	gmCertificate.ExtraExtensions = cert.ExtraExtensions
+	gmCertificate.UnhandledCriticalExtensions = cert.UnhandledCriticalExtensions
+	for i := 0; i < len(cert.ExtKeyUsage); i++ {
+		gmCertificate.ExtKeyUsage = append(gmCertificate.ExtKeyUsage, ExtKeyUsage(cert.ExtKeyUsage[i]))
+	}
+	gmCertificate.UnknownExtKeyUsage = cert.UnknownExtKeyUsage
+	gmCertificate.BasicConstraintsValid = cert.BasicConstraintsValid
+	gmCertificate.IsCA = cert.IsCA
+	gmCertificate.MaxPathLen = cert.MaxPathLen
+	gmCertificate.MaxPathLenZero = cert.MaxPathLenZero
+	gmCertificate.SubjectKeyId = cert.SubjectKeyId
+	gmCertificate.AuthorityKeyId = cert.AuthorityKeyId
+	gmCertificate.OCSPServer = cert.OCSPServer
+	gmCertificate.IssuingCertificateURL = cert.IssuingCertificateURL
+	gmCertificate.DNSNames = cert.DNSNames
+	gmCertificate.EmailAddresses = cert.EmailAddresses
+	gmCertificate.IPAddresses = cert.IPAddresses
+	gmCertificate.PermittedDNSDomainsCritical = cert.PermittedDNSDomainsCritical
+	gmCertificate.PermittedDNSDomains = cert.PermittedDNSDomains
+	gmCertificate.ExcludedDNSDomains = cert.ExcludedDNSDomains
+	gmCertificate.CRLDistributionPoints = cert.CRLDistributionPoints
+	gmCertificate.PolicyIdentifiers = cert.PolicyIdentifiers
+
+	return &gmCertificate
 }
