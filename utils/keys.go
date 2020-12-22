@@ -30,6 +30,14 @@ type ecPrivateKey struct {
 	PublicKey     asn1.BitString        `asn1:"optional,explicit,tag:1"`
 }
 
+func PrivateKeyToDER(privateKey *sm2.PrivateKey) ([]byte, error) {
+	if privateKey == nil {
+		return nil, errors.New("invalid ecdsa private key. It must be different from nil")
+	}
+
+	return x509.MarshalECPrivateKey(privateKey)
+}
+
 // PrivateKeyToPEM converts the private key to PEM format.
 // EC private keys are converted to PKCS#8 format.
 // RSA private keys are converted to PKCS#1 format.
