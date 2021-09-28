@@ -367,7 +367,7 @@ var signatureAlgorithmDetails = []struct {
 	{ECDSAWithSHA256, oidSignatureECDSAWithSHA256, ECDSA, crypto.SHA256},
 	{ECDSAWithSHA384, oidSignatureECDSAWithSHA384, ECDSA, crypto.SHA384},
 	{ECDSAWithSHA512, oidSignatureECDSAWithSHA512, ECDSA, crypto.SHA512},
-	{SM2WithSM3, oidSignatureSM2WithSM3, SM2, 255},
+	{SM2WithSM3, oidSignatureSM2WithSM3, SM2, SM3},
 	{SM2WithSHA1, oidSignatureSM2WithSHA1, SM2, crypto.SHA1},
 	{SM2WithSHA256, oidSignatureSM2WithSHA256, SM2, crypto.SHA256},
 }
@@ -1773,7 +1773,7 @@ func signingParamsForPublicKey(pub interface{}, requestedSigAlgo SignatureAlgori
 		switch pub.Curve {
 		case sm2.P256():
 			//hashFunc = tjSM3
-			hashFunc = 255
+			hashFunc = SM3
 			sigAlgo.Algorithm = oidSignatureSM2WithSM3
 			//hashFunc = crypto.SHA256
 			//sigAlgo.Algorithm = oidSignatureSM2WithSHA256
@@ -1920,15 +1920,12 @@ func CreateCertificate(rand io.Reader, template, parent *Certificate, pub, priv 
 
 	c.Raw = tbsCertContents
 
-	var h hash.Hash
-	if hashFunc == 255 {
-		h = sm3.New()
-	} else {
-		h = hashFunc.New()
+	digest := tbsCertContents
+	if hashFunc != SM3 {
+		h := hashFunc.New()
+		h.Write(tbsCertContents)
+		digest = h.Sum(nil)
 	}
-
-	h.Write(tbsCertContents)
-	digest := h.Sum(nil)
 
 	var signerOpts crypto.SignerOpts
 	signerOpts = hashFunc
@@ -1942,7 +1939,7 @@ func CreateCertificate(rand io.Reader, template, parent *Certificate, pub, priv 
 	var signature []byte
 	switch key.Public().(type) {
 	case *sm2.PublicKey:
-		signature, err = key.Sign(rand, tbsCertContents, signerOpts)
+		signature, err = key.Sign(rand, digest, signerOpts)
 		if err != nil {
 			return
 		}
@@ -2038,14 +2035,17 @@ func (c *Certificate) CreateCRL(rand io.Reader, priv interface{}, revokedCerts [
 		return
 	}
 
-	h := hashFunc.New()
-	h.Write(tbsCertListContents)
-	digest := h.Sum(nil)
+	digest := tbsCertListContents
+	if hashFunc != SM3 {
+		h := hashFunc.New()
+		h.Write(tbsCertListContents)
+		digest = h.Sum(nil)
+	}
 
 	var signature []byte
 	switch key.(type) {
 	case *sm2.PrivateKey:
-		signature, err = key.Sign(rand, tbsCertListContents, hashFunc)
+		signature, err = key.Sign(rand, digest, hashFunc)
 		if err != nil {
 			return
 		}
