@@ -944,19 +944,43 @@ func checkSignature(algo SignatureAlgorithm, signed, signature []byte, publicKey
 		}
 		return
 	case *ecdsa.PublicKey:
-		ecdsaSig := new(ecdsaSignature)
-		if rest, err := asn1.Unmarshal(signature, ecdsaSig); err != nil {
-			return err
-		} else if len(rest) != 0 {
-			return errors.New("x509: trailing data after ECDSA signature")
+		tmpPub := publicKey.(*ecdsa.PublicKey)
+		switch tmpPub.Curve {
+		case sm2.P256():
+			sm2Sig := new(sm2Signature)
+			if rest, err := asn1.Unmarshal(signature, sm2Sig); err != nil {
+				return err
+			} else if len(rest) != 0 {
+				return errors.New("x509: trailing data after sm2 signature")
+			}
+			if sm2Sig.R.Sign() <= 0 || sm2Sig.S.Sign() <= 0 {
+				return errors.New("x509: sm2 signature contained zero or negative values")
+			}
+			sm2Pub := &sm2.PublicKey{
+				Curve: sm2.P256(),
+				X:     tmpPub.X,
+				Y:     tmpPub.Y,
+			}
+			if !sm2.Verify(sm2Pub, signed, sm2Sig.R, sm2Sig.S) {
+				return errors.New("x509: sm2 verification failure")
+			}
+			return
+		default:
+			ecdsaSig := new(ecdsaSignature)
+			if rest, err := asn1.Unmarshal(signature, ecdsaSig); err != nil {
+				return err
+			} else if len(rest) != 0 {
+				return errors.New("x509: trailing data after ECDSA signature")
+			}
+			if ecdsaSig.R.Sign() <= 0 || ecdsaSig.S.Sign() <= 0 {
+				return errors.New("x509: ECDSA signature contained zero or negative values")
+			}
+			if !ecdsa.Verify(pub, digest, ecdsaSig.R, ecdsaSig.S) {
+				return errors.New("x509: ECDSA verification failure")
+			}
+			return
 		}
-		if ecdsaSig.R.Sign() <= 0 || ecdsaSig.S.Sign() <= 0 {
-			return errors.New("x509: ECDSA signature contained zero or negative values")
-		}
-		if !ecdsa.Verify(pub, digest, ecdsaSig.R, ecdsaSig.S) {
-			return errors.New("x509: ECDSA verification failure")
-		}
-		return
+
 	}
 	return ErrUnsupportedAlgorithm
 }
@@ -2332,7 +2356,7 @@ func CreateCertificateRequest(rand io.Reader, template *CertificateRequest, priv
 		if err != nil {
 			return
 		}
-	case *ecdsa.PublicKey:
+	default:
 		h := hashFunc.New()
 		h.Write(tbsCSRContents)
 		digest := h.Sum(nil)
@@ -2340,24 +2364,7 @@ func CreateCertificateRequest(rand io.Reader, template *CertificateRequest, priv
 		if err != nil {
 			return
 		}
-	default:
-		err = errors.New("unsupport algorithm")
 	}
-	//switch key.(type) {
-	//case *sm2.PrivateKey:
-	//	signature, err = key.Sign(rand, tbsCSRContents, hashFunc)
-	//	if err != nil {
-	//		return
-	//	}
-	//default:
-	//	h := hashFunc.New()
-	//	h.Write(tbsCSRContents)
-	//	digest := h.Sum(nil)
-	//	signature, err = key.Sign(rand, digest, hashFunc)
-	//	if err != nil {
-	//		return
-	//	}
-	//}
 
 	return asn1.Marshal(certificateRequest{
 		TBSCSR:             tbsCSR,
