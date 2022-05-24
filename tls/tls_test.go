@@ -106,7 +106,7 @@ func client() {
 	//	log.Fatal("Failed to Load client keypair")
 	//}
 	c := &Config{
-		ServerName:   "tls.testserver.com",
+		ServerName:   "peer0.org1.example.com",
 		GMSupport:    &GMSupport{},
 		Certificates: []Certificate{signcert /*, enccert*/},
 		RootCAs:      cp,

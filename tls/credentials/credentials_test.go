@@ -83,7 +83,7 @@ func clientRun() {
 	certPool.AppendCertsFromPEM(cacert)
 	creds := NewTLS(&tls.Config{
 		GMSupport:    &tls.GMSupport{},
-		ServerName:   "tls.testserver.com",
+		ServerName:   "peer0.org1.example.com",
 		Certificates: []tls.Certificate{cert,cert},
 		RootCAs:      certPool,
 		CipherSuites: DefaultTLSCipherSuites,
