@@ -79,6 +79,23 @@ func GenerateKey(rand io.Reader) (*PrivateKey, error) {
 	return priv, nil
 }
 
+// go-sdk新增接口
+func GenerateKeyBySeed(rand io.Reader, seed string) (*PrivateKey, error) {
+	c := P256()
+	k, _ := new(big.Int).SetString(seed, 16)
+	priv := new(PrivateKey)
+	priv.PublicKey.Curve = c
+	priv.D = k
+	//(1+d)^-1
+	priv.DInv = new(big.Int).Add(k, one)
+	priv.DInv.ModInverse(priv.DInv, c.Params().N)
+	priv.PublicKey.X, priv.PublicKey.Y = c.ScalarBaseMult(k.Bytes())
+	if opt, ok := c.(optMethod); ok {
+		priv.PreComputed = opt.InitPubKeyTable(priv.PublicKey.X, priv.PublicKey.Y)
+	}
+	return priv, nil
+}
+
 func _generateRandK(rand io.Reader, c elliptic.Curve) (k *big.Int) {
 	params := c.Params()
 	b := make([]byte, params.BitSize/8+8)
