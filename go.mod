@@ -1,4 +1,4 @@
-module github.com/peersafe/gm-crypto
+module github.com/ChainSQL/gm-crypto
 
 go 1.14
 
