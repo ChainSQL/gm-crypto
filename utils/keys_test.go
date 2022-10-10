@@ -2,8 +2,9 @@ package utils
 
 import (
 	"crypto/rand"
-	"github.com/peersafe/gm-crypto/sm2"
 	"testing"
+
+	"github.com/ChainSQL/gm-crypto/sm2"
 )
 
 func TestPEM2Key(t *testing.T) {
@@ -24,7 +25,7 @@ func TestPEM2Key(t *testing.T) {
 	if err != nil {
 		t.Errorf("pem to private key error %t", err)
 	}
-	
+
 	normalPk, err := PEMtoPublicKey(pemPk, nil)
 	if err != nil {
 		t.Errorf("pem to public key error %t", err)

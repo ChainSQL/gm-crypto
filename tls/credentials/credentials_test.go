@@ -8,9 +8,9 @@ import (
 	"net"
 	"testing"
 
-	"github.com/peersafe/gm-crypto/tls"
-	"github.com/peersafe/gm-crypto/tls/credentials/echo"
-	"github.com/peersafe/gm-crypto/x509"
+	"github.com/ChainSQL/gm-crypto/tls"
+	"github.com/ChainSQL/gm-crypto/tls/credentials/echo"
+	"github.com/ChainSQL/gm-crypto/x509"
 	"google.golang.org/grpc"
 )
 
@@ -57,7 +57,7 @@ func serverRun() {
 	creds := NewTLS(&tls.Config{
 		GMSupport:    &tls.GMSupport{},
 		ClientAuth:   tls.RequireAndVerifyClientCert,
-		Certificates: []tls.Certificate{cert,cert},
+		Certificates: []tls.Certificate{cert, cert},
 		ClientCAs:    certPool,
 		CipherSuites: DefaultTLSCipherSuites,
 	})
@@ -84,7 +84,7 @@ func clientRun() {
 	creds := NewTLS(&tls.Config{
 		GMSupport:    &tls.GMSupport{},
 		ServerName:   "peer0.org1.example.com",
-		Certificates: []tls.Certificate{cert,cert},
+		Certificates: []tls.Certificate{cert, cert},
 		RootCAs:      certPool,
 		CipherSuites: DefaultTLSCipherSuites,
 	})

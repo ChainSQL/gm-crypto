@@ -15,7 +15,7 @@ import (
 	"fmt"
 	"hash"
 
-	"github.com/peersafe/gm-crypto/sm3"
+	"github.com/ChainSQL/gm-crypto/sm3"
 )
 
 // Split a premaster secret in two as specified in RFC 4346, section 5.

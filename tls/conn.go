@@ -18,8 +18,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/peersafe/gm-crypto/sm4"
-	"github.com/peersafe/gm-crypto/x509"
+	"github.com/ChainSQL/gm-crypto/sm4"
+	"github.com/ChainSQL/gm-crypto/x509"
 )
 
 // A Conn represents a secured connection.

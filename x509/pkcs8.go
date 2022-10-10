@@ -9,7 +9,8 @@ import (
 	"encoding/asn1"
 	"errors"
 	"fmt"
-	"github.com/peersafe/gm-crypto/sm2"
+
+	"github.com/ChainSQL/gm-crypto/sm2"
 )
 
 // pkcs8 reflects an ASN.1, PKCS#8 PrivateKey. See

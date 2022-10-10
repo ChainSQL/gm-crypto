@@ -15,8 +15,8 @@ import (
 	"log"
 	"sync/atomic"
 
-	"github.com/peersafe/gm-crypto/sm2"
-	"github.com/peersafe/gm-crypto/x509"
+	"github.com/ChainSQL/gm-crypto/sm2"
+	"github.com/ChainSQL/gm-crypto/x509"
 )
 
 // serverHandshakeStateGM contains details of a server handshake in progress.
@@ -199,7 +199,7 @@ func (hs *serverHandshakeStateGM) readClientHello() (isResume bool, err error) {
 	if len(hs.cert) == 0 {
 		c.sendAlert(alertInternalError)
 		return false, fmt.Errorf("tls: amount of server certificates == 0")
-	}else if len(hs.cert) == 1 {
+	} else if len(hs.cert) == 1 {
 		hs.cert = append(hs.cert, hs.cert[0])
 	}
 

@@ -16,8 +16,8 @@ import (
 	"strconv"
 	"sync/atomic"
 
-	"github.com/peersafe/gm-crypto/sm2"
-	"github.com/peersafe/gm-crypto/x509"
+	"github.com/ChainSQL/gm-crypto/sm2"
+	"github.com/ChainSQL/gm-crypto/x509"
 )
 
 func (c *Conn) clientHandshakeGM() error {
@@ -272,8 +272,8 @@ func (hs *clientHandshakeStateGM) doFullHandshake() error {
 	if len(certMsg.certificates) == 0 {
 		c.sendAlert(alertInsufficientSecurity)
 		return fmt.Errorf("tls: length of certificates == 0")
-	}else if len(certMsg.certificates) == 1 {
-		certMsg.certificates = append(certMsg.certificates,certMsg.certificates[0])
+	} else if len(certMsg.certificates) == 1 {
+		certMsg.certificates = append(certMsg.certificates, certMsg.certificates[0])
 	}
 
 	hs.finishedHash.Write(certMsg.marshal())

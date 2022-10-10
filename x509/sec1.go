@@ -10,8 +10,9 @@ import (
 	"encoding/asn1"
 	"errors"
 	"fmt"
-	"github.com/peersafe/gm-crypto/sm2"
 	"math/big"
+
+	"github.com/ChainSQL/gm-crypto/sm2"
 )
 
 const ecPrivKeyVersion = 1

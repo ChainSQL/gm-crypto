@@ -9,9 +9,10 @@ import (
 	"crypto/cipher"
 	"crypto/hmac"
 	"crypto/tls"
-	"github.com/peersafe/gm-crypto/sm3"
-	"github.com/peersafe/gm-crypto/sm4"
-	"github.com/peersafe/gm-crypto/x509"
+
+	"github.com/ChainSQL/gm-crypto/sm3"
+	"github.com/ChainSQL/gm-crypto/sm4"
+	"github.com/ChainSQL/gm-crypto/x509"
 )
 
 const VersionGMSSL = 0x0101 // GM/T 0024-2014
@@ -128,9 +129,9 @@ func ConnectionStateToGM(gotls *tls.ConnectionState) *ConnectionState {
 	for i := 0; i < len(gotls.VerifiedChains); i++ {
 		var list []*x509.Certificate
 		for j := 0; j < len(gotls.VerifiedChains[i]); j++ {
-			list = append(list,  x509.CertificateToGM(gotls.VerifiedChains[i][j]))
+			list = append(list, x509.CertificateToGM(gotls.VerifiedChains[i][j]))
 		}
-		gmConnectionState.VerifiedChains = append(gmConnectionState.VerifiedChains,list)
+		gmConnectionState.VerifiedChains = append(gmConnectionState.VerifiedChains, list)
 	}
 	gmConnectionState.SignedCertificateTimestamps = gotls.SignedCertificateTimestamps
 	gmConnectionState.OCSPResponse = gotls.OCSPResponse

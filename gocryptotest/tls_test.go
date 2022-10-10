@@ -4,12 +4,13 @@ import (
 	"bufio"
 	"crypto/tls"
 	"crypto/x509"
-	gmtls "github.com/peersafe/gm-crypto/tls"
-	gmx509 "github.com/peersafe/gm-crypto/x509"
 	"io/ioutil"
 	"log"
 	"net"
 	"testing"
+
+	gmtls "github.com/ChainSQL/gm-crypto/tls"
+	gmx509 "github.com/ChainSQL/gm-crypto/x509"
 )
 
 var DefaultTLSCipherSuites = []uint16{
@@ -19,18 +20,18 @@ var DefaultTLSCipherSuites = []uint16{
 
 var (
 	//AuthType = tls.RequestClientCert //fabric单证书模式
-	GmAuthType         = gmtls.RequireAndVerifyClientCert //fabric双证书模式
-	AuthType         =    tls.RequireAndVerifyClientCert //fabric双证书模式
-	SERVER_CA        = "../tls/gmcert/ca.crt"     //服务端根证书
-	SERVER_SIGN_CERT = "../tls/gmcert/server.crt" //服务端签名证书
-	SERVER_SIGN_KEY  = "../tls/gmcert/server.key" //服务端签名私钥
-	SERVER_ENC_CERT  = "../tls/gmcert/server.crt" //服务端加密证书
-	SERVER_ENC_KEY   = "../tls/gmcert/server.key" //服务端加密私钥
-	CLIENT_CA        = "../tls/gmcert/ca.crt"     //客户端根证书
-	CLIENT_SIGN_CERT = "../tls/gmcert/client.crt" //客户端签名证书
-	CLIENT_SIGN_KEY  = "../tls/gmcert/client.key" //客户端签名私钥
-	CLIENT_ENC_CERT  = "../tls/gmcert/client.crt" //客户端加密证书
-	CLIENT_ENC_KEY   = "../tls/gmcert/client.key" //客户端签名私钥
+	GmAuthType       = gmtls.RequireAndVerifyClientCert //fabric双证书模式
+	AuthType         = tls.RequireAndVerifyClientCert   //fabric双证书模式
+	SERVER_CA        = "../tls/gmcert/ca.crt"           //服务端根证书
+	SERVER_SIGN_CERT = "../tls/gmcert/server.crt"       //服务端签名证书
+	SERVER_SIGN_KEY  = "../tls/gmcert/server.key"       //服务端签名私钥
+	SERVER_ENC_CERT  = "../tls/gmcert/server.crt"       //服务端加密证书
+	SERVER_ENC_KEY   = "../tls/gmcert/server.key"       //服务端加密私钥
+	CLIENT_CA        = "../tls/gmcert/ca.crt"           //客户端根证书
+	CLIENT_SIGN_CERT = "../tls/gmcert/client.crt"       //客户端签名证书
+	CLIENT_SIGN_KEY  = "../tls/gmcert/client.key"       //客户端签名私钥
+	CLIENT_ENC_CERT  = "../tls/gmcert/client.crt"       //客户端加密证书
+	CLIENT_ENC_KEY   = "../tls/gmcert/client.key"       //客户端签名私钥
 )
 
 func TestTLSServer(t *testing.T) {
@@ -66,7 +67,7 @@ func handleConnection(conn net.Conn) {
 }
 
 //运行三方包方式server
-func runthreeserver(t *testing.T){
+func runthreeserver(t *testing.T) {
 	signcert, err := gmtls.LoadX509KeyPair(SERVER_SIGN_CERT, SERVER_SIGN_KEY)
 	if err != nil {
 		t.Fatal(err)
@@ -89,7 +90,7 @@ func runthreeserver(t *testing.T){
 	if err != nil {
 		t.Fatal(err)
 	}
-	log.Printf("Start to three server address:%v  clientAuthType=%v\n", ln.Addr(),AuthType)
+	log.Printf("Start to three server address:%v  clientAuthType=%v\n", ln.Addr(), AuthType)
 	defer ln.Close()
 	for {
 		conn, err := ln.Accept()
@@ -146,7 +147,7 @@ func runthreeclient(t *testing.T) {
 }
 
 //运行标准口方式server
-func runstandardserver(t *testing.T){
+func runstandardserver(t *testing.T) {
 	signcert, err := tls.LoadX509KeyPair(SERVER_SIGN_CERT, SERVER_SIGN_KEY)
 	if err != nil {
 		t.Fatal(err)
@@ -194,7 +195,7 @@ func runstandardclient(t *testing.T) {
 		t.Fatal("Failed to Load client keypair")
 	}
 	c := &tls.Config{
-		MaxVersion: tls.VersionTLS12,
+		MaxVersion:   tls.VersionTLS12,
 		ServerName:   "peer0.org1.example.com",
 		Certificates: []tls.Certificate{signcert /*, enccert*/},
 		RootCAs:      cp,

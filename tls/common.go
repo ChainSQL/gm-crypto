@@ -18,7 +18,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/peersafe/gm-crypto/x509"
+	"github.com/ChainSQL/gm-crypto/x509"
 )
 
 const (

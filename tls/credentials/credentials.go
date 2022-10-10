@@ -40,13 +40,14 @@ package credentials
 import (
 	"errors"
 	"fmt"
-	"github.com/peersafe/gm-crypto/x509"
-	"github.com/peersafe/gm-crypto/tls"
 	"io/ioutil"
 	"net"
 	"strings"
-	"google.golang.org/grpc/credentials"
+
+	"github.com/ChainSQL/gm-crypto/tls"
+	"github.com/ChainSQL/gm-crypto/x509"
 	"golang.org/x/net/context"
+	"google.golang.org/grpc/credentials"
 )
 
 var (

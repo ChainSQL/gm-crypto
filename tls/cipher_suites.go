@@ -14,7 +14,7 @@ import (
 	"crypto/sha256"
 	"hash"
 
-	"github.com/peersafe/gm-crypto/x509"
+	"github.com/ChainSQL/gm-crypto/x509"
 )
 
 // a keyAgreement implements the client and server side of a TLS key agreement

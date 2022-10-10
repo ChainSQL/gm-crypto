@@ -9,9 +9,10 @@ import (
 	"crypto/elliptic"
 	"crypto/rand"
 	"encoding/hex"
-	"github.com/peersafe/gm-crypto/sm3"
 	"math/big"
 	"testing"
+
+	"github.com/ChainSQL/gm-crypto/sm3"
 )
 
 func TestKeyGen(t *testing.T) {
@@ -207,9 +208,9 @@ func TestEncAndDec(t *testing.T) {
 func TestDecrypt(t *testing.T) {
 	//old version c1||c2||c3 cipher
 	/*c, _ := hex.DecodeString("04c03f6661e748ca80880af89237981a6ec80155971d41a0f128e7edef0ba332daf4d804d0d0df33f" +
-		"90928a8bce36d41bbd89313978ec706775a7045f58866715e511257c5b91b5f30f8cfcf55cf4b6228dbd91288e5a36a63a4b37e0a" +
-		"dc7c758d95f6c6cabc1e1f6db87715948452070d915d02f58b8abec4e1972ae431274dfcd5e9d955db04f2eb5f48d9db15df968cf" +
-		"ea53cfff8c00063ff204e99207b734c170230")
+	"90928a8bce36d41bbd89313978ec706775a7045f58866715e511257c5b91b5f30f8cfcf55cf4b6228dbd91288e5a36a63a4b37e0a" +
+	"dc7c758d95f6c6cabc1e1f6db87715948452070d915d02f58b8abec4e1972ae431274dfcd5e9d955db04f2eb5f48d9db15df968cf" +
+	"ea53cfff8c00063ff204e99207b734c170230")
 	*/
 	//new version c1||c3||c2 cipher
 	c, _ := hex.DecodeString("04f7c1f276a21a34ebeed2ce1b76d7cb92ef81e69de229ea3254cc4bb7fec8b02224729a8722244b22" +
@@ -233,4 +234,3 @@ func TestDecrypt(t *testing.T) {
 		t.Fatal("decryption is invalid")
 	}
 }
-

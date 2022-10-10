@@ -2,11 +2,12 @@ package tls
 
 import (
 	"bufio"
-	"github.com/peersafe/gm-crypto/x509"
 	"io/ioutil"
 	"log"
 	"net"
 	"testing"
+
+	"github.com/ChainSQL/gm-crypto/x509"
 )
 
 var DefaultTLSCipherSuites = []uint16{
@@ -58,7 +59,7 @@ func TestTLS(t *testing.T) {
 		log.Println(err)
 		return
 	}
-	log.Printf("Start to server address:%v  clientAuthType=%v\n", ln.Addr(),AuthType)
+	log.Printf("Start to server address:%v  clientAuthType=%v\n", ln.Addr(), AuthType)
 	go client()
 	defer ln.Close()
 	for {

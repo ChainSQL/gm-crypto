@@ -18,7 +18,7 @@ import (
 	"strings"
 	"sync/atomic"
 
-	"github.com/peersafe/gm-crypto/x509"
+	"github.com/ChainSQL/gm-crypto/x509"
 )
 
 type clientHandshakeState struct {

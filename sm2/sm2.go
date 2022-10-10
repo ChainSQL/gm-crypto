@@ -11,7 +11,7 @@ import (
 	"io"
 	"math/big"
 
-	"github.com/peersafe/gm-crypto/sm3"
+	"github.com/ChainSQL/gm-crypto/sm3"
 )
 
 type PublicKey struct {

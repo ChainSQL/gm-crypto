@@ -12,7 +12,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/peersafe/gm-crypto/sm2"
+	"github.com/ChainSQL/gm-crypto/sm2"
 )
 
 // pickSignatureAlgorithm selects a signature algorithm that is compatible with

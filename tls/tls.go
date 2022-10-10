@@ -22,8 +22,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/peersafe/gm-crypto/sm2"
-	"github.com/peersafe/gm-crypto/x509"
+	"github.com/ChainSQL/gm-crypto/sm2"
+	"github.com/ChainSQL/gm-crypto/x509"
 )
 
 // Server returns a new TLS server side connection

@@ -25,8 +25,6 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"github.com/peersafe/gm-crypto/sm2"
-	"github.com/peersafe/gm-crypto/sm3"
 	"hash"
 	"io"
 	"math/big"
@@ -34,6 +32,9 @@ import (
 	"reflect"
 	"strconv"
 	"time"
+
+	"github.com/ChainSQL/gm-crypto/sm2"
+	"github.com/ChainSQL/gm-crypto/sm3"
 )
 
 // pkixPublicKey reflects a PKIX public key structure. See SubjectPublicKeyInfo

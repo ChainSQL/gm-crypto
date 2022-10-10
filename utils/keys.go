@@ -7,8 +7,9 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"github.com/peersafe/gm-crypto/sm2"
-	"github.com/peersafe/gm-crypto/x509"
+
+	"github.com/ChainSQL/gm-crypto/sm2"
+	"github.com/ChainSQL/gm-crypto/x509"
 )
 
 var (
@@ -60,8 +61,8 @@ func PrivateKeyToPEM(privateKey *sm2.PrivateKey, pwd []byte) ([]byte, error) {
 	})
 
 	if err != nil {
-			return nil, fmt.Errorf("error marshaling SM2 key to asn1 [%s]", err)
-		}
+		return nil, fmt.Errorf("error marshaling SM2 key to asn1 [%s]", err)
+	}
 	var pkcs8Key pkcs8Info
 	pkcs8Key.Version = 0
 	pkcs8Key.PrivateKeyAlgorithm = make([]asn1.ObjectIdentifier, 2)
@@ -71,8 +72,8 @@ func PrivateKeyToPEM(privateKey *sm2.PrivateKey, pwd []byte) ([]byte, error) {
 
 	pkcs8Bytes, err := asn1.Marshal(pkcs8Key)
 	if err != nil {
-			return nil, fmt.Errorf("error marshaling EC key to asn1 [%s]", err)
-		}
+		return nil, fmt.Errorf("error marshaling EC key to asn1 [%s]", err)
+	}
 	return pem.EncodeToMemory(
 		&pem.Block{
 			Type:  "PRIVATE KEY",
@@ -111,8 +112,6 @@ func PrivateKeyToEncryptedPEM(priKey *sm2.PrivateKey, pwd []byte) ([]byte, error
 	}
 	return pem.EncodeToMemory(block), nil
 }
-
-
 
 // PEMtoPrivateKey unmarshal a pem to private key
 func PEMtoPrivateKey(raw []byte, pwd []byte) (*sm2.PrivateKey, error) {
